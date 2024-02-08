@@ -35,7 +35,6 @@ const userController = {
           email: newUser.email
         }
       })
-      
     } catch (err) {
       next(err)
     }
@@ -46,7 +45,7 @@ const userController = {
       const { email, password } = req.body
 
       // Check if user email exists
-      const user = await User.findOne({ where: { email }})
+      const user = await User.findOne({ where: { email } })
       if (!user) throw new HttpError(401, 'Invalid email or password')
 
       // Check if password is correct
@@ -67,7 +66,6 @@ const userController = {
         authToken: token,
         user: userInfo
       })
-
     } catch (err) {
       next(err)
     }
