@@ -22,7 +22,6 @@ router.post('/login', userController.login)
 // router.route('/records:id')
 //   .delete(recordController.deleteRecord)
 
-
 // router.route('/categories:id')
 //   .patch(categoryController.getCategory)
 //   .delete(categoryController.deleteCategory)
