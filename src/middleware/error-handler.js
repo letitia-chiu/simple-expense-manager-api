@@ -1,7 +1,7 @@
 const errorHandler = (err, req, res, next) => {
   if (err instanceof Error) {
-    res.status(err.stats || 500).json({
-      status: 'error',
+    res.status(err.status || 500).json({
+      status: err.status ? `error: ${err.name}` : 'error',
       message: err.message
     })
   } else {

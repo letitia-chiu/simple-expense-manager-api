@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const port = 3001
+const errorHandler = require('./middleware/error-handler')
 
 const api = require('./routes')
 
@@ -10,10 +11,13 @@ app.use(express.json())
 
 app.use('/api', api)
 
+app.use('/', (req, res) => {
+  res.send('Hello World')
+})
+
 app.listen(port, () => {
   console.info(`Express server running on http://localhost:${port}`)
 })
 
-app.use('/', (req, res) => {
-  res.send('Hello World')
-})
+// Error handling middleware
+app.use(errorHandler)
