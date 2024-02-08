@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const validator = require('validator')
 const HttpError = require('../utils/HttpError')
 const { User } = require('../models')
@@ -40,8 +41,36 @@ const userController = {
     }
   },
 
-  login: (req, res, next) => {
-    res.json('login')
+  login: async (req, res, next) => {
+    try {
+      const { email, password } = req.body
+
+      // Check if user email exists
+      const user = await User.findOne({ where: { email }})
+      if (!user) throw new HttpError(401, 'Invalid email or password')
+
+      // Check if password is correct
+      const isMatch = await bcrypt.compare(password, user.password)
+      if (!isMatch) throw new HttpError(401, 'Invalid email or password')
+
+      // Generate token
+      const userInfo = {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+      const token = jwt.sign(userInfo, process.env.JWT_SECRET_KEY)
+
+      // Send response
+      res.json({
+        status: 'success',
+        authToken: token,
+        user: userInfo
+      })
+
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
