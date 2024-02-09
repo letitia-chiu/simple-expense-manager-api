@@ -24,8 +24,8 @@ router.route('/expense')
   .get(recordController.getExpenseList)
   .post(recordController.postExpense)
 
-// router.route('/records/:id')
-//   .delete(recordController.deleteRecord)
+router.route('/records/:id')
+  .delete(recordController.deleteRecord)
 
 // router.route('/categories/:id')
 //   .patch(categoryController.getCategory)

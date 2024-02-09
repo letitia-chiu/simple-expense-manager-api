@@ -1,4 +1,6 @@
 const recordService = require('../services/record-service')
+const HttpError = require('../utils/HttpError')
+const { Record } = require('../models')
 
 const recordController = {
   getIncomeList: (req, res, next) => {
@@ -96,6 +98,26 @@ const recordController = {
       })
     })
   },
+
+  deleteRecord: async (req, res ,next) => {
+    try {
+      // Check if record exists & belongs to user
+      const record = await Record.findByPk(req.params.id)
+      if (!record) throw new HttpError(404, 'Record not found')
+      if (record.userId !== req.user.id) throw new HttpError(403, 'Permission denied')
+
+      // Delete record
+      await record.destroy()
+
+      // Send response
+      res.status(200).json({
+        status: 'success',
+        record
+      })
+    } catch (err) {
+      next(err)
+    }
+  }
 }
 
 module.exports = recordController
