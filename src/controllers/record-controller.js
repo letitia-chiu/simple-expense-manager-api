@@ -9,7 +9,12 @@ const recordController = {
         where: {
           userId: req.user.id,
           isIncome: true
-        }
+        },
+        order: [['id', 'ASC']],
+        include: [{
+          model: Category,
+          attributes: ['id', 'name']
+        }]
       })
 
       // Send response
@@ -47,7 +52,7 @@ const recordController = {
       // Send response
       res.json({
         status: 'success',
-        record: {
+        income: {
           ...newRecord.toJSON(),
           categoryName: category ? category.name : null,
         }
@@ -74,7 +79,7 @@ const recordController = {
       // Send response
       res.json({
         status: 'success',
-        record
+        income: record
       })
     } catch (err) {
       next(err)
