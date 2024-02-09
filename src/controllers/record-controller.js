@@ -59,6 +59,18 @@ const recordController = {
         expenseList: data
       })
     })
+  },
+
+  postExpense: (req, res, next) => {
+    req.isIncome = false
+    recordService.postRecord(req, (err, data) => {
+      if (err) return next(err)
+
+      res.status(200).json({
+        status: 'success',
+        expense: data
+      })
+    })
   }
 }
 
