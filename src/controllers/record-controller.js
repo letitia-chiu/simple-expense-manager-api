@@ -29,11 +29,10 @@ const recordController = {
       // Verify user input
       if (!title) throw new HttpError(400, 'Title is required')
       if (!amount) throw new HttpError(400, 'Amount is required')
-      if (categoryId) {
-        const category = await Category.findByPk(categoryId)
-        if (!category || !category.isIncome || category.userId !== req.user.id) {
-          throw new HttpError(400, 'Invalid category')
-        }
+      
+      const category =  categoryId ? await Category.findByPk(categoryId) : null
+      if (!category || !category.isIncome || category.userId !== req.user.id) {
+        throw new HttpError(400, 'Invalid category')
       }
 
       // Create new income record
@@ -48,8 +47,19 @@ const recordController = {
       // Send response
       res.json({
         status: 'success',
-        record: newRecord
+        record: {
+          ...newRecord.toJSON(),
+          categoryName: category ? category.name : null,
+        }
       })
+    } catch (err) {
+      next(err)
+    }
+  },
+
+  getIncome: async (req, res, next) => {
+    try {
+      
     } catch (err) {
       next(err)
     }
