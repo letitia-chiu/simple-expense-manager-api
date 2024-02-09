@@ -15,7 +15,7 @@ router.use(authenticateJWT) // Auth middleware
 //   .patch(recordController.patchIncome)
 router.route('/income')
   .get(recordController.getIncomeList)
-//   .post(recordController.postIncome)
+  .post(recordController.postIncome)
 
 // router.route('/expense:id')
 //   .get(recordController.getExpense)
