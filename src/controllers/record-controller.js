@@ -59,7 +59,23 @@ const recordController = {
 
   getIncome: async (req, res, next) => {
     try {
-      
+      // Get data from db
+      const record = await Record.findByPk(req.params.id, {
+        include: [{
+          model: Category,
+          attributes: ['id', 'name']
+        }]
+      })
+
+      // Check if record exists & belongs to user
+      if (!record) throw new HttpError(404, 'Record not found')
+      if (record.userId !== req.user.id) throw new HttpError(403, 'Permission denied')
+
+      // Send response
+      res.json({
+        status: 'success',
+        record
+      })
     } catch (err) {
       next(err)
     }
