@@ -84,6 +84,18 @@ const recordController = {
       })
     })
   },
+
+  patchExpense: (req, res, next) => {
+    req.isIncome = false
+    recordService.patchRecord(req, (err, data) => {
+      if (err) return next(err)
+
+      res.status(200).json({
+        status: 'success',
+        expense: data
+      })
+    })
+  },
 }
 
 module.exports = recordController

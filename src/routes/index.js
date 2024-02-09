@@ -19,7 +19,7 @@ router.route('/income')
 
 router.route('/expense/:id')
   .get(recordController.getExpense)
-//   .patch(recordController.patchExpense)
+  .patch(recordController.patchExpense)
 router.route('/expense')
   .get(recordController.getExpenseList)
   .post(recordController.postExpense)
