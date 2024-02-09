@@ -18,7 +18,7 @@ const recordController = {
       })
 
       // Send response
-      res.json({
+      res.status(200).json({
         status: 'success',
         incomeList
       })
@@ -31,13 +31,16 @@ const recordController = {
     try {
       const { title, amount, categoryId } = req.body
 
-      // Verify user input
+      // Validate user input
       if (!title) throw new HttpError(400, 'Title is required')
       if (!amount) throw new HttpError(400, 'Amount is required')
       
-      const category =  categoryId ? await Category.findByPk(categoryId) : null
-      if (!category || !category.isIncome || category.userId !== req.user.id) {
-        throw new HttpError(400, 'Invalid category')
+      let category = null
+      if (categoryId) {
+        category = await Category.findByPk(categoryId)
+        if (!category || !category.isIncome || category.userId !== req.user.id) {
+          throw new HttpError(400, 'Invalid category')
+        }
       }
 
       // Create new income record
@@ -50,11 +53,11 @@ const recordController = {
       })
 
       // Send response
-      res.json({
+      res.status(200).json({
         status: 'success',
         income: {
           ...newRecord.toJSON(),
-          categoryName: category ? category.name : null,
+          categoryName: category ? category.name : null
         }
       })
     } catch (err) {
@@ -77,10 +80,52 @@ const recordController = {
       if (record.userId !== req.user.id) throw new HttpError(403, 'Permission denied')
 
       // Send response
-      res.json({
+      res.status(200).json({
         status: 'success',
         income: record
       })
+    } catch (err) {
+      next(err)
+    }
+  },
+
+  patchIncome: async (req, res, next) => {
+    try {
+      const { title, amount, categoryId } = req.body
+
+      // Validate user input
+      if (!title) throw new HttpError(400, 'Title is required')
+      if (!amount) throw new HttpError(400, 'Amount is required')
+
+      let category = null
+      if (categoryId) {
+        category = await Category.findByPk(categoryId)
+        if (!category || !category.isIncome || category.userId !== req.user.id) {
+          throw new HttpError(400, 'Invalid category')
+        }
+      }
+
+      // Check if record exists & belongs to user
+      const record = await Record.findByPk(req.params.id)
+      if (!record) throw new HttpError(404, 'Record not found')
+      if (record.userId !== req.user.id) throw new HttpError(403, 'Permission denied')
+
+      // Update record
+      await record.update({
+        title,
+        amount,
+        categoryId: categoryId || null
+      })
+
+      // Send response
+      res.status(200).json({
+        status: 'success',
+        income: {
+          ...record.toJSON(),
+          categoryName: category ? category.name : null
+        }
+      })
+
     } catch (err) {
       next(err)
     }
