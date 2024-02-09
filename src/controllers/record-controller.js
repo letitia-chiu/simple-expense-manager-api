@@ -47,6 +47,18 @@ const recordController = {
         income: data
       })
     })
+  },
+
+  getExpenseList: (req, res, next) => {
+    req.isIncome = false
+    recordService.getRecordList(req, (err, data) => {
+      if (err) return next(err)
+
+      res.status(200).json({
+        status: 'success',
+        expenseList: data
+      })
+    })
   }
 }
 
