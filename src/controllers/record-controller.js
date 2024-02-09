@@ -71,7 +71,19 @@ const recordController = {
         expense: data
       })
     })
-  }
+  },
+
+  getExpense: async (req, res, next) => {
+    req.isIncome = false
+    recordService.getRecord(req, (err, data) => {
+      if (err) return next(err)
+
+      res.status(200).json({
+        status: 'success',
+        expense: data
+      })
+    })
+  },
 }
 
 module.exports = recordController
