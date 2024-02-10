@@ -31,7 +31,7 @@ router.route('/records/:id')
 
 router.route('/categories/:id')
   .get(categoryController.getCategory)
-//   .patch(categoryController.patchCategory)
+  .patch(categoryController.patchCategory)
 //   .delete(categoryController.deleteCategory)
 router.route('/categories')
   .get(categoryController.getCategories)

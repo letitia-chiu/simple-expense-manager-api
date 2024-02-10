@@ -63,6 +63,33 @@ const categoryController = {
     } catch (err) {
       next(err)
     }
+  },
+
+  patchCategory: async (req, res, next) => {
+    try {
+      const { name } = req.body
+
+      // Validate user input
+      if (!name || name.trim().length === 0) throw new HttpError(400, 'Category name is required')
+
+      // Get data from db
+      const category = await Category.findByPk(req.params.id)
+
+      // Check if category exist & belongs to user
+      if (!category) throw new HttpError(404, 'Category not found')
+      if (category.userId !== req.user.id) throw new HttpError(403, 'Permission denied')
+
+      // Update category
+      const updatedCategory = await category.update({ name })
+
+      // Send response
+      res.status(200).json({
+        status: 'success',
+        category: updatedCategory
+      })
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
