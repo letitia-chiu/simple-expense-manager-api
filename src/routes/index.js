@@ -2,8 +2,10 @@ const router = require('express').Router()
 
 const userController = require('../controllers/user-controller')
 const recordController = require('../controllers/record-controller')
+const categoryController = require('../controllers/category-controller')
 const authenticateJWT = require('../middleware/auth')
 
+// Routes
 router.post('/register', userController.register)
 router.post('/login', userController.login)
 
@@ -30,8 +32,8 @@ router.route('/records/:id')
 // router.route('/categories/:id')
 //   .patch(categoryController.getCategory)
 //   .delete(categoryController.deleteCategory)
-// router.route('/categories')
-//   .get(categoryController.getCategories)
+router.route('/categories')
+  .get(categoryController.getCategories)
 //   .post(categoryController.postCategory)
 
 router.use('/', (req, res) => {
