@@ -99,7 +99,7 @@ const recordController = {
     })
   },
 
-  deleteRecord: async (req, res ,next) => {
+  deleteRecord: async (req, res, next) => {
     try {
       // Check if record exists & belongs to user
       const record = await Record.findByPk(req.params.id)

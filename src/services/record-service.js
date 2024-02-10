@@ -31,7 +31,7 @@ const recordService = {
       // Validate user input
       if (!title) throw new HttpError(400, 'Title is required')
       if (!amount) throw new HttpError(400, 'Amount is required')
-      
+
       let category = null
       if (categoryId) {
         category = await Category.findByPk(categoryId)
