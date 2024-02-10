@@ -44,6 +44,25 @@ const categoryController = {
     } catch (err) {
       next(err)
     }
+  },
+
+  getCategory: async (req, res, next) => {
+    try {
+      // Get data from db
+      const category = await Category.findByPk(req.params.id)
+
+      // Check if category exist & belongs to user
+      if (!category) throw new HttpError(404, 'Category not found')
+      if (category.userId !== req.user.id) throw new HttpError(403, 'Permission denied')
+
+      // Send response
+      res.status(200).json({
+        status: 'success',
+        category
+      })
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
