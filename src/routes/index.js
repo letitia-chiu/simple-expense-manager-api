@@ -34,7 +34,7 @@ router.route('/records/:id')
 //   .delete(categoryController.deleteCategory)
 router.route('/categories')
   .get(categoryController.getCategories)
-//   .post(categoryController.postCategory)
+  .post(categoryController.postCategory)
 
 router.use('/', (req, res) => {
   res.send('Express API')
