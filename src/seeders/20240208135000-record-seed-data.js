@@ -5,25 +5,29 @@ const initialData = [
     title: 'Salary of January',
     amount: 60000,
     is_income: true,
-    category_id: 6
+    category_id: 6,
+    date: '2024-01-01'
   },
   {
     title: 'Coffee',
     amount: 45,
     is_income: false,
-    category_id: 1
+    category_id: 1,
+    date: '2024-01-15'
   },
   {
     title: 'T-shirt',
     amount: 390,
     is_income: false,
-    category_id: 4
+    category_id: 4,
+    date: '2024-02-01'
   },
   {
     title: 'EZcard charge',
     amount: 500,
     is_income: false,
-    category_id: 2
+    category_id: 2,
+    date: '2024-02-09'
   }
 ]
 
