@@ -1,6 +1,6 @@
 const recordService = require('../services/record-service')
 const HttpError = require('../utils/HttpError')
-const { Record } = require('../models')
+const { Record, Category } = require('../models')
 
 const recordController = {
   getIncomeList: (req, res, next) => {
@@ -18,18 +18,6 @@ const recordController = {
   postIncome: (req, res, next) => {
     req.isIncome = true
     recordService.postRecord(req, (err, data) => {
-      if (err) return next(err)
-
-      res.status(200).json({
-        status: 'success',
-        income: data
-      })
-    })
-  },
-
-  getIncome: async (req, res, next) => {
-    req.isIncome = true
-    recordService.getRecord(req, (err, data) => {
       if (err) return next(err)
 
       res.status(200).json({
@@ -75,18 +63,6 @@ const recordController = {
     })
   },
 
-  getExpense: async (req, res, next) => {
-    req.isIncome = false
-    recordService.getRecord(req, (err, data) => {
-      if (err) return next(err)
-
-      res.status(200).json({
-        status: 'success',
-        expense: data
-      })
-    })
-  },
-
   patchExpense: (req, res, next) => {
     req.isIncome = false
     recordService.patchRecord(req, (err, data) => {
@@ -97,6 +73,30 @@ const recordController = {
         expense: data
       })
     })
+  },
+
+  getRecord: async (req, res, next) => {
+    try {
+      // Get data from db
+      const record = await Record.findByPk(req.params.id, {
+        include: [{
+          model: Category,
+          attributes: ['id', 'name']
+        }]
+      })
+
+      // Check if record exists & belongs to user
+      if (!record) throw new HttpError(404, 'Record not found')
+      if (record.userId !== req.user.id) throw new HttpError(403, 'Permission denied')
+
+      // Send response
+      res.status(200).json({
+        status: 'success',
+        record
+      })
+    } catch (err) {
+      next(err)
+    }
   },
 
   deleteRecord: async (req, res, next) => {

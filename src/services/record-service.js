@@ -60,33 +60,6 @@ const recordService = {
     }
   },
 
-  getRecord: async (req, cb) => {
-    try {
-      // Get data from db
-      const record = await Record.findByPk(req.params.id, {
-        include: [{
-          model: Category,
-          attributes: ['id', 'name']
-        }]
-      })
-
-      // Check if record exists & belongs to user
-      if (!record) throw new HttpError(404, 'Record not found')
-      if (record.userId !== req.user.id) throw new HttpError(403, 'Permission denied')
-
-      // Check if isIncome match
-      if (record.isIncome !== req.isIncome) {
-        if (req.isIncome) throw new HttpError(400, 'This record is not income')
-        else throw new HttpError(400, 'This record is not expense')
-      }
-
-      // Return data
-      return cb(null, record)
-    } catch (err) {
-      cb(err)
-    }
-  },
-
   patchRecord: async (req, cb) => {
     try {
       const { title, amount, categoryId, date } = req.body

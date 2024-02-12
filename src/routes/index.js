@@ -13,20 +13,19 @@ router.use(authenticateJWT) // Auth middleware
 // ** Define routes that need authentication below this line ** //
 
 router.route('/income/:id')
-  .get(recordController.getIncome)
   .patch(recordController.patchIncome)
 router.route('/income')
   .get(recordController.getIncomeList)
   .post(recordController.postIncome)
 
 router.route('/expense/:id')
-  .get(recordController.getExpense)
   .patch(recordController.patchExpense)
 router.route('/expense')
   .get(recordController.getExpenseList)
   .post(recordController.postExpense)
 
 router.route('/records/:id')
+  .get(recordController.getRecord)
   .delete(recordController.deleteRecord)
 
 router.route('/categories/:id')
