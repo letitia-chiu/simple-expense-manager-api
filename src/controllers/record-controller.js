@@ -1,5 +1,6 @@
 const HttpError = require('../utils/HttpError')
 const dayjs = require('dayjs')
+const validator = require('validator')
 const { Op } = require('sequelize')
 const { Record, Category } = require('../models')
 
@@ -9,6 +10,14 @@ const recordController = {
       // Parse the year and month from the request query
       const year = req.query.year ? parseInt(req.query.year) : new Date().getFullYear()
       const month = req.query.month ? parseInt(req.query.month) - 1 : new Date().getMonth()
+
+      // Check the format of year & month
+      if (!(validator.isInt(month.toString()) && month >= 0 && month <= 11)) {
+        throw new HttpError(400, 'Month should be an integer between 1 to 12')
+      }
+      if (!(validator.isInt(year.toString()) && year >= 1900)) {
+        throw new HttpError(400, 'Year should be an integer from 1900')
+      }
 
       // Create date objects for the start and end of the month
       const startOfMonth = new Date(year, month, 1)
