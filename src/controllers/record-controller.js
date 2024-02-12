@@ -3,16 +3,30 @@ const HttpError = require('../utils/HttpError')
 const { Record, Category } = require('../models')
 
 const recordController = {
-  getIncomeList: (req, res, next) => {
-    req.isIncome = true
-    recordService.getRecordList(req, (err, data) => {
-      if (err) return next(err)
+  getRecords: async (req, res, next) => {
+    try {
+      // Get data from db
+      const records = await Record.findAll({
+        where: {
+          userId: req.user.id,
+          isIncome: req.query.isIncome === 'true'
+        },
+        order: [['id', 'ASC']],
+        include: [{
+          model: Category,
+          attributes: ['id', 'name']
+        }]
+      })
 
+      // Send response
       res.status(200).json({
         status: 'success',
-        incomeList: data
+        recordType: req.query.isIncome === 'true' ? 'income' : 'expense',
+        records
       })
-    })
+    } catch (err) {
+      next(err)
+    }
   },
 
   postIncome: (req, res, next) => {
@@ -23,18 +37,6 @@ const recordController = {
       res.status(200).json({
         status: 'success',
         income: data
-      })
-    })
-  },
-
-  getExpenseList: (req, res, next) => {
-    req.isIncome = false
-    recordService.getRecordList(req, (err, data) => {
-      if (err) return next(err)
-
-      res.status(200).json({
-        status: 'success',
-        expenseList: data
       })
     })
   },

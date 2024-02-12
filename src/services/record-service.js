@@ -2,28 +2,6 @@ const HttpError = require('../utils/HttpError')
 const { Record, Category } = require('../models')
 
 const recordService = {
-  getRecordList: async (req, cb) => {
-    try {
-      // Get data from db
-      const recordList = await Record.findAll({
-        where: {
-          userId: req.user.id,
-          isIncome: req.isIncome
-        },
-        order: [['id', 'ASC']],
-        include: [{
-          model: Category,
-          attributes: ['id', 'name']
-        }]
-      })
-
-      // Return data
-      return cb(null, recordList)
-    } catch (err) {
-      cb(err)
-    }
-  },
-
   postRecord: async (req, cb) => {
     try {
       const { title, amount, categoryId, date } = req.body
