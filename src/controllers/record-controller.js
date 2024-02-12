@@ -1,16 +1,29 @@
 const HttpError = require('../utils/HttpError')
+const dayjs = require('dayjs')
+const { Op } = require('sequelize')
 const { Record, Category } = require('../models')
 
 const recordController = {
   getRecords: async (req, res, next) => {
     try {
+      // Parse the year and month from the request query
+      const year = req.query.year ? parseInt(req.query.year) : new Date().getFullYear()
+      const month = req.query.month ? parseInt(req.query.month) - 1 : new Date().getMonth()
+
+      // Create date objects for the start and end of the month
+      const startOfMonth = new Date(year, month, 1)
+      const endOfMonth = new Date(year, month + 1, 0)
+
       // Get data from db
       const records = await Record.findAll({
         where: {
           userId: req.user.id,
-          isIncome: req.query.isIncome === 'true'
+          isIncome: req.query.isIncome === 'true',
+          date: {
+            [Op.between]: [startOfMonth, endOfMonth]
+          }
         },
-        order: [['id', 'ASC']],
+        order: [['date', 'ASC']],
         include: [{
           model: Category,
           attributes: ['id', 'name']
@@ -21,6 +34,7 @@ const recordController = {
       res.status(200).json({
         status: 'success',
         recordType: req.query.isIncome === 'true' ? 'income' : 'expense',
+        period: `${dayjs(startOfMonth).format('MMM YYYY')}`,
         records
       })
     } catch (err) {
