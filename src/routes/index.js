@@ -1,35 +1,21 @@
 const router = require('express').Router()
+const authenticateJWT = require('../middleware/auth')
 
 const userController = require('../controllers/user-controller')
-const recordController = require('../controllers/record-controller')
-const categoryController = require('../controllers/category-controller')
-const authenticateJWT = require('../middleware/auth')
+
+const records = require('./records')
+const categories = require('./categories')
 
 // Routes
 router.post('/register', userController.register)
 router.post('/login', userController.login)
 
-router.use(authenticateJWT) // Auth middleware
-// ** Define routes that need authentication below this line ** //
-
-router.route('/records')
-  .get(recordController.getRecords)
-  .post(recordController.postRecord)
-router.route('/records/:id')
-  .get(recordController.getRecord)
-  .patch(recordController.patchRecord)
-  .delete(recordController.deleteRecord)
-
-router.route('/categories/:id')
-  .get(categoryController.getCategory)
-  .patch(categoryController.patchCategory)
-  .delete(categoryController.deleteCategory)
-router.route('/categories')
-  .get(categoryController.getCategories)
-  .post(categoryController.postCategory)
+// ** Routes that need authentication ** //
+router.use('/records', authenticateJWT, records)
+router.use('/categories', authenticateJWT, categories)
 
 router.use('/', (req, res) => {
-  res.send('Express API')
+  res.json('Simple Expense Manager API')
 })
 
 module.exports = router

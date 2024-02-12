@@ -12,7 +12,7 @@ app.use(express.json())
 app.use('/api', api)
 
 app.use('/', (req, res) => {
-  res.send('Hello World')
+  res.json('Simple Expense Manager API')
 })
 
 app.listen(port, () => {
