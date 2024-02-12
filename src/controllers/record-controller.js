@@ -1,4 +1,3 @@
-const recordService = require('../services/record-service')
 const HttpError = require('../utils/HttpError')
 const { Record, Category } = require('../models')
 
@@ -29,28 +28,44 @@ const recordController = {
     }
   },
 
-  postIncome: (req, res, next) => {
-    req.isIncome = true
-    recordService.postRecord(req, (err, data) => {
-      if (err) return next(err)
+  postRecord: async (req, res, next) => {
+    try {
+      const { title, amount, categoryId, date } = req.body
+      const isIncome = req.body.isIncome === 'true' || req.body.isIncome === true
 
+      // Validate user input
+      if (!title) throw new HttpError(400, 'Title is required')
+      if (!amount) throw new HttpError(400, 'Amount is required')
+
+      let category = null
+      if (categoryId) {
+        category = await Category.findByPk(categoryId)
+        if (!category || category.isIncome !== isIncome || category.userId !== req.user.id) {
+          throw new HttpError(400, 'Invalid category')
+        }
+      }
+
+      // Create new record
+      const newRecord = await Record.create({
+        title,
+        amount,
+        categoryId: categoryId || null,
+        userId: req.user.id,
+        isIncome,
+        date: date || new Date()
+      })
+
+      // Send response
       res.status(200).json({
         status: 'success',
-        income: data
+        record: {
+          ...newRecord.toJSON(),
+          categoryName: category ? category.name : null
+        }
       })
-    })
-  },
-
-  postExpense: (req, res, next) => {
-    req.isIncome = false
-    recordService.postRecord(req, (err, data) => {
-      if (err) return next(err)
-
-      res.status(200).json({
-        status: 'success',
-        expense: data
-      })
-    })
+    } catch (err) {
+      next(err)
+    }
   },
 
   getRecord: async (req, res, next) => {
