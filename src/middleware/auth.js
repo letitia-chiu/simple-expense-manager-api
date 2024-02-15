@@ -45,6 +45,8 @@ const authCheck = (req, res, next) => {
   try {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+
+    // Send response
     return res.status(200).json({
       isAuthorized: true,
       user: decoded
