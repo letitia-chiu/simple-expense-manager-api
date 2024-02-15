@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const authenticateJWT = require('../middleware/auth')
+const { authenticateJWT, authCheck } = require('../middleware/auth')
 
 const userController = require('../controllers/user-controller')
 
@@ -9,6 +9,7 @@ const categories = require('./categories')
 // Routes
 router.post('/register', userController.register)
 router.post('/login', userController.login)
+router.get('/authCheck', authCheck)
 
 // ** Routes that need authentication ** //
 router.use('/records', authenticateJWT, records)
