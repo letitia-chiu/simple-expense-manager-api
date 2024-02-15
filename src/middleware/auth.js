@@ -33,4 +33,26 @@ const authenticateJWT = (req, res, next) => {
   }
 }
 
-module.exports = authenticateJWT
+// Auth check
+const authCheck = (req, res, next) => {
+  const token = extractBearerToken(req)
+
+  // Check if token exists
+  if (!token) return res.status(401).json({
+    isAuthorized: false
+  })
+
+  try {
+    // Verify token
+    jwt.verify(token, process.env.JWT_SECRET_KEY)
+    return res.status(200).json({
+      isAuthorized: true
+    })
+  } catch (err) {
+    return res.status(401).json({
+      isAuthorized: false
+    })
+  }
+}
+
+module.exports = { authenticateJWT, authCheck }
