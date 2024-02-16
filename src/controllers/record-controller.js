@@ -32,7 +32,7 @@ const recordController = {
             [Op.between]: [startOfMonth, endOfMonth]
           }
         },
-        order: [['date', 'ASC']],
+        order: [['date', 'ASC'], ['id', 'ASC']],
         include: [{
           model: Category,
           attributes: ['id', 'name']

@@ -9,7 +9,8 @@ const categoryController = {
         where: {
           userId: req.user.id,
           isIncome: req.query.isIncome === 'true'
-        }
+        },
+        order: [['id', 'ASC']]
       })
 
       // Send response
