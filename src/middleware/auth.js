@@ -38,9 +38,7 @@ const authCheck = (req, res, next) => {
   const token = extractBearerToken(req)
 
   // Check if token exists
-  if (!token) return res.status(401).json({
-    isAuthorized: false
-  })
+  if (!token) throw new HttpError(401, 'Authentication failed')
 
   try {
     // Verify token
@@ -52,9 +50,7 @@ const authCheck = (req, res, next) => {
       user: decoded
     })
   } catch (err) {
-    return res.status(401).json({
-      isAuthorized: false
-    })
+    throw new HttpError(401, 'Authentication failed')
   }
 }
 
