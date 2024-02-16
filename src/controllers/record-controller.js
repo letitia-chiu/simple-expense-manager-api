@@ -200,7 +200,7 @@ const recordController = {
       const endOfMonth = new Date(year, month + 1, 0)
 
       // Get data from db
-      const summaries = await Record.findAll({
+      const results = await Record.findAll({
         where: {
           userId: req.user.id,
           isIncome: req.query.isIncome === 'true',
@@ -213,7 +213,23 @@ const recordController = {
           [Sequelize.fn('SUM', Sequelize.col('amount')), 'totalAmount']
         ],
         group: ['categoryId'],
-        order: [['categoryId', 'ASC']]
+        order: [['categoryId', 'ASC']],
+        raw: true
+      })
+
+      // Add category name
+      const categories = await Category.findAll({
+        where: {
+          id: { [Op.in]: results.map(r => r.categoryId) }
+        },
+        attributes: ['id', 'name']
+      })
+      const summaries = results.map(r => {
+        const category = categories.find(c => c.id === r.categoryId)
+        return {
+          ...r,
+          categoryName: category ? category.name : null
+        }
       })
 
       // Send response
