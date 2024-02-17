@@ -194,8 +194,8 @@ const recordController = {
         status: 'success',
         report: {
           balance,
-          incomeSummaries,
-          expenseSummaries
+          income: incomeSummaries,
+          expense: expenseSummaries
         }
       })
     } catch (err) {
