@@ -6,8 +6,8 @@ router.route('/')
   .get(recordController.getRecords)
   .post(recordController.postRecord)
 
-router.route('/summaries')
-  .get(recordController.getSummaries)
+router.route('/report')
+  .get(recordController.getReport)
 
 router.route('/:id')
   .get(recordController.getRecord)
