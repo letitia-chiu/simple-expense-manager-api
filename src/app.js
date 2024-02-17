@@ -1,13 +1,13 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const port = 3001
+const port = process.env.PORT || 3001
 const errorHandler = require('./middleware/error-handler')
 
 // Handle CORS problem
 const cors = require('cors')
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   credentials: true, // access-control-allow-credentials:true
   optionSuccessStatus: 200
 }
@@ -25,7 +25,7 @@ app.use('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.info(`Express server running on http://localhost:${port}`)
+  console.info(`Express server running port: ${port}`)
 })
 
 // Error handling middleware
