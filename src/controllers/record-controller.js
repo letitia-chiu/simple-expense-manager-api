@@ -192,7 +192,7 @@ const recordController = {
       // Send response
       res.status(200).json({
         status: 'success',
-        summaries: {
+        report: {
           balance,
           incomeSummaries,
           expenseSummaries
