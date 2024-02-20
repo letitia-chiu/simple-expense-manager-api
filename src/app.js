@@ -4,14 +4,16 @@ const app = express()
 const port = process.env.PORT || 3001
 const errorHandler = require('./middleware/error-handler')
 
-// Handle CORS problem
-const cors = require('cors')
-const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: true, // access-control-allow-credentials:true
-  optionSuccessStatus: 200
+// Handle Dev CORS problem
+if (process.env.NODE_ENV !== 'production') {
+  const cors = require('cors')
+  const corsOptions = {
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    credentials: true, // access-control-allow-credentials:true
+    optionSuccessStatus: 200
+  }
+  app.use(cors(corsOptions))
 }
-app.use(cors(corsOptions))
 
 const api = require('./routes')
 
