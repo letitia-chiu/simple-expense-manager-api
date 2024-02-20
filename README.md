@@ -11,8 +11,8 @@ Back-End API server for [Simple Expense Manager](https://letitia-chiu.github.io/
 - Users can get monthly financial reports.
 
 ### Front-End Repository & Live Site URL
-[Front-End Repository](https://github.com/letitia-chiu/simple-expense-manager)
-[Live Site URL](https://letitia-chiu.github.io/simple-expense-manager)
+- [Front-End Repository](https://github.com/letitia-chiu/simple-expense-manager)
+- [Live Site URL](https://letitia-chiu.github.io/simple-expense-manager)
 
 ## System Architecture
 - Serve the application and PostgreSQL database on AWS EC2
